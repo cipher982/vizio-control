@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Vizio</title>
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --surface: #141414;
+            --border: #222;
+            --text: #e0e0e0;
+            --dim: #666;
+            --accent: #10b981;
+            --red: #ef4444;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 1.5rem;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        header select {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        header .actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        header button {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--dim);
+            padding: 0.5rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+
+        /* Nav */
+        nav {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        nav a {
+            color: var(--dim);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid transparent;
+        }
+
+        nav a.active {
+            color: var(--text);
+            border-color: var(--accent);
+        }
+
+        /* Sections */
+        section { display: none; }
+        section.active { display: block; }
+
+        /* Remote */
+        .power-row {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .power-row button {
+            flex: 1;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+        }
+
+        .power-row .on { background: var(--accent); color: #000; }
+        .power-row .off { background: var(--red); color: #fff; }
+
+        .dpad-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .dpad {
+            display: grid;
+            grid-template-columns: repeat(3, 56px);
+            grid-template-rows: repeat(3, 56px);
+            gap: 4px;
+        }
+
+        .dpad button {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            border-radius: 8px;
+            font-size: 1.25rem;
+            cursor: pointer;
+        }
+
+        .dpad button:active { background: var(--border); }
+        .dpad .empty { visibility: hidden; border: none; }
+        .dpad .ok { background: var(--accent); color: #000; font-size: 0.8rem; font-weight: 600; }
+
+        .quick-nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .quick-nav button {
+            background: none;
+            border: none;
+            color: var(--dim);
+            font-size: 0.8rem;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+        }
+
+        .quick-nav button:hover { color: var(--text); }
+
+        .vol-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .vol-row button {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-size: 1.25rem;
+            cursor: pointer;
+        }
+
+        .vol-row .mute {
+            background: none;
+            border: none;
+            color: var(--dim);
+            font-size: 0.75rem;
+            width: auto;
+            height: auto;
+        }
+
+        /* Picture */
+        .mode-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .mode-pills button {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--dim);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        .mode-pills button.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #000;
+        }
+
+        .slider-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .slider-group label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--dim);
+            margin-bottom: 0.5rem;
+        }
+
+        .slider-group input[type="range"] {
+            width: 100%;
+            height: 4px;
+            border-radius: 2px;
+            background: var(--border);
+            -webkit-appearance: none;
+        }
+
+        .slider-group input::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+        }
+
+        /* Inputs */
+        .input-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .input-list button {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--dim);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: left;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .input-list button.active {
+            border-color: var(--accent);
+            color: var(--text);
+        }
+
+        .input-list button.active::after {
+            content: "●";
+            color: var(--accent);
+        }
+
+        /* Status */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .toast.show { opacity: 1; }
+        .toast.error { border-color: var(--red); }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .modal.open { display: flex; }
+
+        .modal-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            width: 90%;
+            max-width: 320px;
+        }
+
+        .modal-box h3 {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-box input {
+            width: 100%;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .modal-box .btns {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .modal-box .btns button {
+            flex: 1;
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: 1px solid var(--border);
+        }
+
+        .modal-box .btns .cancel { background: var(--bg); color: var(--dim); }
+        .modal-box .btns .confirm { background: var(--accent); color: #000; border: none; }
+    </style>
+</head>
+<body>
+    <header>
+        <select id="tvSelect"></select>
+        <div class="actions">
+            <button onclick="openAddTV()">+</button>
+            <button onclick="startPairing()">pair</button>
+        </div>
+    </header>
+
+    <nav>
+        <a class="active" data-tab="remote">Remote</a>
+        <a data-tab="picture">Picture</a>
+        <a data-tab="inputs">Inputs</a>
+    </nav>
+
+    <section id="remote" class="active">
+        <div class="power-row">
+            <button class="on" onclick="cmd('power/on')">On</button>
+            <button class="off" onclick="cmd('power/off')">Off</button>
+        </div>
+
+        <div class="dpad-container">
+            <div class="dpad">
+                <div class="empty"></div>
+                <button onclick="cmd('nav/up')">▲</button>
+                <div class="empty"></div>
+                <button onclick="cmd('nav/left')">◀</button>
+                <button class="ok" onclick="cmd('nav/ok')">OK</button>
+                <button onclick="cmd('nav/right')">▶</button>
+                <div class="empty"></div>
+                <button onclick="cmd('nav/down')">▼</button>
+                <div class="empty"></div>
+            </div>
+        </div>
+
+        <div class="quick-nav">
+            <button onclick="cmd('nav/back')">Back</button>
+            <button onclick="cmd('nav/home')">Home</button>
+            <button onclick="cmd('nav/menu')">Menu</button>
+        </div>
+
+        <div class="vol-row">
+            <button onclick="cmd('volume/down')">−</button>
+            <button class="mute" onclick="cmd('mute/toggle')">Mute</button>
+            <button onclick="cmd('volume/up')">+</button>
+        </div>
+    </section>
+
+    <section id="picture">
+        <div class="mode-pills" id="pictureModes"></div>
+
+        <div class="slider-group">
+            <label>Backlight <span id="backlightVal">50</span></label>
+            <input type="range" id="backlight" min="0" max="100" value="50">
+        </div>
+        <div class="slider-group">
+            <label>Brightness <span id="brightnessVal">50</span></label>
+            <input type="range" id="brightness" min="0" max="100" value="50">
+        </div>
+        <div class="slider-group">
+            <label>Contrast <span id="contrastVal">50</span></label>
+            <input type="range" id="contrast" min="0" max="100" value="50">
+        </div>
+        <div class="slider-group">
+            <label>Color <span id="colorVal">50</span></label>
+            <input type="range" id="color" min="0" max="100" value="50">
+        </div>
+        <div class="slider-group">
+            <label>Sharpness <span id="sharpnessVal">50</span></label>
+            <input type="range" id="sharpness" min="0" max="100" value="50">
+        </div>
+    </section>
+
+    <section id="inputs">
+        <div class="input-list" id="inputList"></div>
+    </section>
+
+    <div class="toast" id="toast"></div>
+
+    <!-- Add TV Modal -->
+    <div class="modal" id="addModal">
+        <div class="modal-box">
+            <h3>Add TV</h3>
+            <input type="text" id="tvName" placeholder="Name (e.g. Living Room)">
+            <input type="text" id="tvHost" placeholder="IP Address">
+            <div class="btns">
+                <button class="cancel" onclick="closeModal()">Cancel</button>
+                <button class="confirm" onclick="addTV()">Add</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pair Modal -->
+    <div class="modal" id="pairModal">
+        <div class="modal-box">
+            <h3>Enter PIN from TV</h3>
+            <input type="text" id="pairPin" placeholder="0000" maxlength="4" style="text-align:center;font-size:1.5rem;letter-spacing:0.5rem;">
+            <div class="btns">
+                <button class="cancel" onclick="closeModal()">Cancel</button>
+                <button class="confirm" onclick="completePairing()">Pair</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTV = localStorage.getItem('currentTV') || null;
+        const toast = document.getElementById('toast');
+        const tvSelect = document.getElementById('tvSelect');
+
+        // Tabs
+        document.querySelectorAll('nav a').forEach(a => {
+            a.onclick = () => {
+                document.querySelectorAll('nav a').forEach(x => x.classList.remove('active'));
+                document.querySelectorAll('section').forEach(x => x.classList.remove('active'));
+                a.classList.add('active');
+                document.getElementById(a.dataset.tab).classList.add('active');
+            };
+        });
+
+        // Sliders
+        document.querySelectorAll('input[type="range"]').forEach(s => {
+            s.oninput = () => document.getElementById(s.id + 'Val').textContent = s.value;
+            s.onchange = () => setSetting(s.id, s.value);
+        });
+
+        // API
+        async function api(method, path, body) {
+            const opts = { method, headers: { 'Content-Type': 'application/json' } };
+            if (body) opts.body = JSON.stringify(body);
+            const r = await fetch('/api' + path, opts);
+            const d = await r.json();
+            if (!r.ok) throw new Error(d.detail || 'Error');
+            return d;
+        }
+
+        async function cmd(action) {
+            if (!currentTV) return show('Select TV', true);
+            await api('POST', `/tvs/${currentTV}/${action}`);
+        }
+
+        async function setSetting(name, value) {
+            if (!currentTV) return;
+            await api('POST', `/tvs/${currentTV}/picture/${name}`, { value: +value });
+            show(`${name}: ${value}`);
+        }
+
+        function show(msg, err) {
+            toast.textContent = msg;
+            toast.className = 'toast show' + (err ? ' error' : '');
+            setTimeout(() => toast.classList.remove('show'), 1500);
+        }
+
+        // Load
+        async function loadTVs() {
+            const tvs = await api('GET', '/tvs');
+            tvSelect.innerHTML = '';
+            for (const [id, tv] of Object.entries(tvs)) {
+                const o = document.createElement('option');
+                o.value = id;
+                o.textContent = tv.name;
+                tvSelect.appendChild(o);
+            }
+            if (currentTV) tvSelect.value = currentTV;
+            else if (tvSelect.options.length) {
+                currentTV = tvSelect.value;
+                localStorage.setItem('currentTV', currentTV);
+            }
+            if (currentTV) loadState();
+        }
+
+        tvSelect.onchange = () => {
+            currentTV = tvSelect.value;
+            localStorage.setItem('currentTV', currentTV);
+            loadState();
+        };
+
+        async function loadState() {
+            if (!currentTV) return;
+            try {
+                const p = await api('GET', `/tvs/${currentTV}/picture`);
+                const modes = [];
+                let currentMode = '';
+                for (const i of p.ITEMS || []) {
+                    if (i.CNAME === 'picture_mode') {
+                        currentMode = i.VALUE;
+                        renderModes(i.ELEMENTS || [], currentMode);
+                    }
+                    const el = document.getElementById(i.CNAME);
+                    if (el) {
+                        el.value = i.VALUE;
+                        document.getElementById(i.CNAME + 'Val').textContent = i.VALUE;
+                    }
+                }
+                await loadInputs();
+            } catch (e) { console.error(e); }
+        }
+
+        function renderModes(modes, current) {
+            const c = document.getElementById('pictureModes');
+            c.innerHTML = '';
+            modes.forEach(m => {
+                const b = document.createElement('button');
+                b.textContent = m;
+                b.className = m === current ? 'active' : '';
+                b.onclick = () => setMode(m);
+                c.appendChild(b);
+            });
+        }
+
+        async function setMode(mode) {
+            await api('POST', `/tvs/${currentTV}/picture/mode`, { value: mode });
+            show(mode);
+            document.querySelectorAll('#pictureModes button').forEach(b =>
+                b.classList.toggle('active', b.textContent === mode));
+            setTimeout(loadState, 300);
+        }
+
+        async function loadInputs() {
+            const [inputs, current] = await Promise.all([
+                api('GET', `/tvs/${currentTV}/inputs`),
+                api('GET', `/tvs/${currentTV}/input`)
+            ]);
+            const cur = current.ITEMS?.[0]?.VALUE;
+            const c = document.getElementById('inputList');
+            c.innerHTML = '';
+            for (const i of inputs.ITEMS || []) {
+                const b = document.createElement('button');
+                const name = i.VALUE?.NAME || i.NAME;
+                b.textContent = name;
+                b.className = name === cur ? 'active' : '';
+                b.onclick = () => setInput(i.NAME);
+                c.appendChild(b);
+            }
+        }
+
+        async function setInput(name) {
+            await api('POST', `/tvs/${currentTV}/input`, { input_name: name });
+            show(name);
+            setTimeout(loadInputs, 300);
+        }
+
+        // Modals
+        function openAddTV() { document.getElementById('addModal').classList.add('open'); }
+        function closeModal() { document.querySelectorAll('.modal').forEach(m => m.classList.remove('open')); }
+
+        async function addTV() {
+            const name = document.getElementById('tvName').value.trim();
+            const host = document.getElementById('tvHost').value.trim();
+            if (!name || !host) return show('Fill all fields', true);
+            const id = name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+            await api('POST', `/tvs/${id}`, { name, host, port: 7345 });
+            closeModal();
+            currentTV = id;
+            localStorage.setItem('currentTV', id);
+            await loadTVs();
+        }
+
+        async function startPairing() {
+            if (!currentTV) return show('Select TV', true);
+            await api('POST', `/tvs/${currentTV}/pair/start`);
+            document.getElementById('pairModal').classList.add('open');
+            document.getElementById('pairPin').value = '';
+        }
+
+        async function completePairing() {
+            const pin = document.getElementById('pairPin').value;
+            if (!pin) return show('Enter PIN', true);
+            await api('POST', `/tvs/${currentTV}/pair/complete`, { pin });
+            show('Paired!');
+            closeModal();
+            loadTVs();
+        }
+
+        // Keyboard
+        document.onkeydown = e => {
+            if (e.target.tagName === 'INPUT') return;
+            const map = {
+                ArrowUp: 'nav/up', ArrowDown: 'nav/down', ArrowLeft: 'nav/left', ArrowRight: 'nav/right',
+                Enter: 'nav/ok', ' ': 'nav/ok', Backspace: 'nav/back', h: 'nav/home', m: 'nav/menu',
+                '+': 'volume/up', '=': 'volume/up', '-': 'volume/down'
+            };
+            if (map[e.key]) { e.preventDefault(); cmd(map[e.key]); }
+        };
+
+        loadTVs();
+    </script>
+</body>
+</html>
